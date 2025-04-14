@@ -13,7 +13,7 @@ const MESSAGE = process.env.MESSAGE || `
 └────────────⭓
 ┌───⭓
 ❒  • Chat with owner •
-❒ *GitHub:* __https://github.com/Wa-Bot-
+❒ *GitHub:* __https://github.com/YourRepo__
 ❒ *Author:* _wa.me/254759006509_
 ❒ *YT:* _ *coming soon*
 └────────────⭓
