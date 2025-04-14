@@ -1,5 +1,5 @@
 // get qr  code of any bot using this ....................
-//coded  by wasi
+//coded  by Techboy
 
 
 const express = require("express");
@@ -17,14 +17,14 @@ const { Boom } = require("@hapi/boom");
 const PORT = process.env.PORT ||  5000
 const MESSAGE = process.env.MESSAGE ||  `
 ┌───⭓『
-❒ *WASI-MD*
+❒ *MR-TECH*
 ❒ _NOW DEPLOY IT_
 └────────────⭓
 ┌───⭓
 ❒  • Chat with owner •
-❒ *GitHub:* __https://github.com/WASI-MD_
-❒ *Author:* _wa.me/923192173398_
-❒ *YT:* _https://youtube.com/@wasitech10_
+❒ *GitHub:* __https://github.com/Wa-Bot-
+❒ *Author:* _wa.me/254759006509_
+❒ *YT:* _ *coming soon*
 └────────────⭓
 `
 
@@ -134,7 +134,7 @@ SESSION-ID ==> ${Scan_Id}
     await fs.emptyDirSync(__dirname+'/auth_info_baileys'); 
 
 
-    //// MADE BY ITXWASI
+    //// MADE BY Techboy
 
 });
 
