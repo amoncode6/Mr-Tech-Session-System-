@@ -1,60 +1,104 @@
-const PastebinAPI = require('pastebin-js'),
-pastebin = new PastebinAPI('EMWTMkQAVfJa9kM-MRUrxd5Oku1U7pgL')
-const { makeid } = require('./id');
-const express = require('express');
-const fs = require('fs');
-let router = express.Router();
+// get qr code of any bot using this ....................
+//coded by Mr Tech
+
+const express = require("express");
+const app = express();
+
 const pino = require("pino");
-const {
-    default: Gifted_Tech,
-    useMultiFileAuthState,
-    delay,
-    makeCacheableSignalKeyStore,
-    Browsers
-} = require("maher-zubair-baileys");
+let { toBuffer } = require("qrcode");
+const path = require('path');
+const fs = require("fs-extra");
+const { Boom } = require("@hapi/boom");
 
-const Techboy_Tech = Gifted_Tech;
+const PORT = process.env.PORT ||  5000
+const MESSAGE = process.env.MESSAGE ||  `
+┌───⭓『
+❒ *MR-TECH*
+❒ _NOW DEPLOY IT_
+└────────────⭓
+┌───⭓
+❒  • Chat with owner •
+❒ *GitHub:* __https://github.com/YourRepo__
+❒ *Author:* _wa.me/254759006509_
+❒ *YT:* _coming soon_
+└────────────⭓
+`
 
-function removeFile(FilePath) {
-    if (!fs.existsSync(FilePath)) return false;
-    fs.rmSync(FilePath, { recursive: true, force: true });
+if (fs.existsSync('./auth_info_baileys')) {
+    fs.emptyDirSync(__dirname + '/auth_info_baileys');
 };
 
-router.get('/', async (req, res) => {
-    const id = makeid();
-    let num = req.query.number;
+app.use("/", async(req, res) => {
 
-    async function MR_TECH_PAIR_CODE() {
-        const { state, saveCreds } = await useMultiFileAuthState('./temp/' + id);
-        try {
-            let Pair_Code_By_Gifted_Tech = Techboy_Tech({
-                auth: {
-                    creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(state.keys),
-                },
-                printQRInTerminal: false,
-                browser: Browsers.macOS("Mr Tech")
-            });
+const { default: WasiWASocket, useMultiFileAuthState, Browsers, delay, DisconnectReason, makeInMemoryStore } = require("@whiskeysockets/baileys");
+const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
 
-            Pair_Code_By_Gifted_Tech.ev.on('creds.update', saveCreds);
-            Pair_Code_By_Gifted_Tech.ev.on('connection.update', async (s) => {
-                const { connection } = s;
-                if (connection === "open") {
-                    await delay(500);
-                    const text = fs.readFileSync(`./temp/${id}/creds.json`);
-                    const session = Buffer.from(text).toString('base64');
-                    const paste = await pastebin.createPaste(session, "session", "javascript", 1, "1H");
-                    removeFile(`./temp/${id}`);
-                    return res.send({ status: true, link: paste, number: num });
+async function WASI() {
+    const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys')
+    try {
+        let Smd = WasiWASocket({
+            printQRInTerminal: false,
+            logger: pino({ level: "silent" }),
+            browser: [Browsers.Chrome, 'Windows 10', 'Chrome/89.0.4389.82'],
+            auth: state
+        });
+
+        Smd.ev.on("connection.update", async (s) => {
+            const { connection, lastDisconnect, qr } = s;
+            if (qr) { res.end(await toBuffer(qr)); }
+
+            if (connection == "open") {
+                await delay(3000);
+                let user = Smd.user.id;
+
+                // SESSION ID
+                let CREDS = fs.readFileSync(__dirname + '/auth_info_baileys/creds.json')
+                var Scan_Id = Buffer.from(CREDS).toString('base64')
+
+                console.log(`
+====================  SESSION ID  ==========================                   
+SESSION-ID ==> ${Scan_Id}
+-------------------   SESSION CLOSED   -----------------------
+`)
+
+                let msgsss = await Smd.sendMessage(user, { text:  Scan_Id });
+                await Smd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+                await delay(1000);
+                try { await fs.emptyDirSync(__dirname + '/auth_info_baileys'); } catch (e) {}
+            }
+
+            Smd.ev.on('creds.update', saveCreds)
+
+            if (connection === "close") {
+                let reason = new Boom(lastDisconnect?.error)?.output.statusCode
+                if (reason === DisconnectReason.connectionClosed) {
+                    console.log("Connection closed!")
+                } else if (reason === DisconnectReason.connectionLost) {
+                    console.log("Connection Lost from Server!")
+                } else if (reason === DisconnectReason.restartRequired) {
+                    console.log("Restart Required, Restarting...")
+                    WASI().catch(err => console.log(err));
+                } else if (reason === DisconnectReason.timedOut) {
+                    console.log("Connection TimedOut!")
+                } else {
+                    console.log('Connection closed with bot. Please run again.');
+                    console.log(reason)
                 }
-            });
-        } catch (e) {
-            return res.send({ status: false, message: e.message });
-        }
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        await fs.emptyDirSync(__dirname + '/auth_info_baileys');
     }
+}
 
-    MR_TECH_PAIR_CODE();
+WASI().catch(async(err) => {
+    console.log(err);
+    await fs.emptyDirSync(__dirname + '/auth_info_baileys');
+    //// MADE BY ITXWASI
 });
 
-module.exports = router;
-               
+});
+
+app.listen(PORT, () => console.log(`App listened on port http://localhost:${PORT}`));
+                
