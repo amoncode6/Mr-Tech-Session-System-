@@ -1,9 +1,9 @@
 const PastebinAPI = require('pastebin-js'),
-pastebin = new PastebinAPI('EMWTMkQAVfJa9kM-MRUrxd5Oku1U7pgL')
-const { makeid } = require('./id');
+    pastebin = new PastebinAPI('EMWTMkQAVfJa9kM-MRUrxd5Oku1U7pgL');
+const { makeid } = require('./id'); // Import the updated makeid function
 const express = require('express');
 const fs = require('fs');
-let router = express.Router()
+let router = express.Router();
 const pino = require("pino");
 const {
     default: Gifted_Tech,
@@ -19,7 +19,7 @@ function removeFile(FilePath) {
 };
 
 router.get('/', async (req, res) => {
-    const id = makeid();
+    const id = makeid(); // This generates a session ID starting with "mr tech ke"
     let num = req.query.number;
 
     async function GIFTED_MD_PAIR_CODE() {
